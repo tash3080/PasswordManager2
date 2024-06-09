@@ -1,0 +1,389 @@
+using System;
+using System.Text;
+using SplashKitSDK;
+#nullable disable
+
+namespace PasswordManager2
+{
+    public class Program
+    {
+        public static void Main()
+        {
+            Window window = new Window("Password Manager", 600, 600);
+            PasswordManager pwmanager = new PasswordManager(window);
+            DatabaseManager databaseManager = new DatabaseManager();
+
+            string password;
+            string siteName;
+            string email;
+            string username;
+
+            Button button = new Button() { X = 20, Y = 555 };
+            Button2 button2 = new Button2() { X = 140, Y = 555 };
+
+            //button.OnClick += (btn) => password = pwmanager.GeneratePassword(12);
+
+
+
+            //databaseManager.CreateDatabase();
+            //databaseManager.InsertIntoDatabase("testsite", "testemail", "testusername", password);
+            //databaseManager.InsertIntoDatabase(siteName, email, username, password);
+
+            databaseManager.ReadDatabase();
+
+            while (!window.CloseRequested)
+            {
+                SplashKit.ProcessEvents();
+                password = button.HandleInput(pwmanager);
+
+                // if (SplashKit.KeyTyped(KeyCode.SpaceKey))
+                // {
+                //     pwmanager.ReadInput(window);
+                // }
+                siteName = button2.HandleInput(pwmanager);
+
+                window.Clear(Color.AntiqueWhite);
+
+                button.Draw();
+                button2.Draw();
+                window.DrawText(password, Color.Black, "SuperFuntime.ttf", 24, 100, 100);
+                window.DrawText(siteName, Color.Black, "SuperFuntime.ttf", 24, 100, 200);
+
+                window.Refresh(60);
+            }
+        }
+    }
+
+    // public delegate void ClickAction(Button b);
+
+    // public class PasswordManager
+    // {
+    //     Window _Window; 
+    //     public PasswordManager(Window window)
+    //     {
+    //         _Window = window;
+    //     }
+
+    //     public string GeneratePassword(int length)
+    //     {
+    //         const string lowercaseChars = "abcdefghijklmnopqrstuvwxyz";
+    //         const string uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    //         const string numericChars = "0123456789";
+    //         const string specialChars = "!@#$%^&*()_+";
+    //         const string allChars = lowercaseChars + uppercaseChars + numericChars + specialChars;
+
+    //         StringBuilder password = new StringBuilder();
+    //         Random random = new Random();
+
+    //         // Ensure at least one of each character type
+    //         password.Append(lowercaseChars[random.Next(lowercaseChars.Length)]);
+    //         password.Append(uppercaseChars[random.Next(uppercaseChars.Length)]);
+    //         password.Append(numericChars[random.Next(numericChars.Length)]);
+    //         password.Append(specialChars[random.Next(specialChars.Length)]);
+
+    //         // Generate the remaining characters
+    //         for (int i = 4; i < length; i++)
+    //         {
+    //             int index = random.Next(allChars.Length);
+    //             password.Append(allChars[index]);
+    //         }
+
+    //         Console.WriteLine(password);
+
+    //         // Shuffle the characters to make it more random
+    //         string shuffledPassword = ShuffleString(password.ToString());
+
+    //         return shuffledPassword;
+    //     }
+
+    //     public string ShuffleString(string str)
+    //     {
+    //         char[] charArray = str.ToCharArray();
+    //         Random random = new Random();
+    //         int length = charArray.Length;
+
+    //         for (int i = 0; i < length; i++)
+    //         {
+    //             int randIndex = random.Next(length);
+    //             char temp = charArray[i];
+    //             charArray[i] = charArray[randIndex];
+    //             charArray[randIndex] = temp;
+    //         }
+
+    //         return new string(charArray);
+    //     }
+
+    //     public string ReadInput()
+    //     {
+    //         string str;
+    //         Rectangle rec = new Rectangle();
+    //         SplashKit.StartReadingText(rec);
+
+    //         do
+    //         {
+    //             SplashKit.ProcessEvents();
+
+    //             if (!SplashKit.ReadingText())
+    //             {
+    //                 str = "Not reading!";
+    //             }
+    //             else
+    //             {
+    //                 str = SplashKit.TextInput();
+    //             }
+
+    //             // str = SplashKit.TextInput();
+    //             // window.Clear(Color.White);
+    //             SplashKit.DrawText(str, Color.Black, "SuperFuntime.ttf", 24, 0, 0);
+    //             Console.WriteLine(str);
+    //             _Window.Refresh(60);
+    //         } while (!SplashKit.KeyTyped(KeyCode.ReturnKey));
+
+    //         return str;
+    //     }
+    // }
+
+    // public class Button
+    // {
+    //     //private PasswordManager _Pwmanager;
+    //     private string _Password = "";
+
+    //     public int X { get; set; }
+    //     public int Y { get; set; }
+    //     public int Width { get; set; }
+    //     public int Height { get; set; }
+
+    //     public string Caption { get; set; }
+
+    //     public Button()
+    //     {
+    //         //_Pwmanager = pwmanager;
+    //         Width = 100;
+    //         Height = 25;
+    //         Caption = "Generate";
+    //     }
+
+    //     public void Draw()
+    //     {
+    //         SplashKit.FillRectangle(Color.LightGray, X, Y, Width, Height);
+    //         SplashKit.DrawText(Caption, Color.Black, X + 5, Y + 5);
+    //     }
+
+    //     public Rectangle Rectangle
+    //     {
+    //         get
+    //         {
+    //             return new Rectangle() { X = X, Y = Y, Width = Width, Height = Height };
+    //         }
+    //     }
+
+    //     public bool IsMouseHover
+    //     {
+    //         get
+    //         {
+    //             return SplashKit.PointInRectangle(SplashKit.MousePosition(), Rectangle);
+    //         }
+    //     }
+
+    //     // public event ClickAction OnClick;
+
+    //     public string HandleInput(PasswordManager pwmanager)
+    //     {
+    //         // string password = "";
+
+    //         if (SplashKit.MouseClicked(MouseButton.LeftButton) && IsMouseHover)
+    //         {
+    //             // if (OnClick != null)
+    //             //     OnClick(this);
+    //             _Password = pwmanager.GeneratePassword(12);
+    //             Console.WriteLine(_Password);
+    //         }
+
+    //         return _Password;
+    //     }
+    // }
+
+    // public class Button2
+    // {
+    //     //private PasswordManager _Pwmanager;
+    //     //private string _Password = "";
+    //     private string _SiteName = "";
+
+    //     public int X { get; set; }
+    //     public int Y { get; set; }
+    //     public int Width { get; set; }
+    //     public int Height { get; set; }
+
+    //     public string Caption { get; set; }
+
+    //     public Button2()
+    //     {
+    //         //_Pwmanager = pwmanager;
+    //         Width = 100;
+    //         Height = 25;
+    //         Caption = "Generate";
+    //     }
+
+    //     public void Draw()
+    //     {
+    //         SplashKit.FillRectangle(Color.LightGray, X, Y, Width, Height);
+    //         SplashKit.DrawText(Caption, Color.Black, X + 5, Y + 5);
+    //     }
+
+    //     public Rectangle Rectangle
+    //     {
+    //         get
+    //         {
+    //             return new Rectangle() { X = X, Y = Y, Width = Width, Height = Height };
+    //         }
+    //     }
+
+    //     public bool IsMouseHover
+    //     {
+    //         get
+    //         {
+    //             return SplashKit.PointInRectangle(SplashKit.MousePosition(), Rectangle);
+    //         }
+    //     }
+
+    //     // public event ClickAction OnClick;
+
+    //     public string HandleInput(PasswordManager pwmanager)
+    //     {
+    //         // string password = "";
+
+    //         if (SplashKit.MouseClicked(MouseButton.LeftButton) && IsMouseHover)
+    //         {
+    //             // if (OnClick != null)
+    //             //     OnClick(this);
+    //             _SiteName = pwmanager.ReadInput();
+    //             Console.WriteLine(_SiteName);
+    //         }
+
+    //         return _SiteName;
+    //     }
+    // }
+
+    // public class Button3
+    // {
+    //     //private PasswordManager _Pwmanager;
+    //     private string _Password = "";
+
+    //     public int X { get; set; }
+    //     public int Y { get; set; }
+    //     public int Width { get; set; }
+    //     public int Height { get; set; }
+
+    //     public string Caption { get; set; }
+
+    //     public Button3()
+    //     {
+    //         //_Pwmanager = pwmanager;
+    //         Width = 100;
+    //         Height = 25;
+    //         Caption = "Generate";
+    //     }
+
+    //     public void Draw()
+    //     {
+    //         SplashKit.FillRectangle(Color.LightGray, X, Y, Width, Height);
+    //         SplashKit.DrawText(Caption, Color.Black, X + 5, Y + 5);
+    //     }
+
+    //     public Rectangle Rectangle
+    //     {
+    //         get
+    //         {
+    //             return new Rectangle() { X = X, Y = Y, Width = Width, Height = Height };
+    //         }
+    //     }
+
+    //     public bool IsMouseHover
+    //     {
+    //         get
+    //         {
+    //             return SplashKit.PointInRectangle(SplashKit.MousePosition(), Rectangle);
+    //         }
+    //     }
+
+    //     // public event ClickAction OnClick;
+
+    //     public string HandleInput(PasswordManager pwmanager)
+    //     {
+    //         // string password = "";
+
+    //         if (SplashKit.MouseClicked(MouseButton.LeftButton) && IsMouseHover)
+    //         {
+    //             // if (OnClick != null)
+    //             //     OnClick(this);
+    //             _Password = pwmanager.GeneratePassword(12);
+    //             Console.WriteLine(_Password);
+    //         }
+
+    //         return _Password;
+    //     }
+    // }
+
+    // public class DatabaseManager
+    // {
+    //     private Database _PasswordManagerDB;
+
+    //     public DatabaseManager()
+    //     {
+    //         _PasswordManagerDB = SplashKit.OpenDatabase("PasswordManagerDB", "PasswordManagerDB");
+    //     }
+
+    //     public void CreateDatabase()
+    //     {
+    //         QueryResult result;
+    //         result = _PasswordManagerDB.RunSql("CREATE TABLE IF NOT EXISTS PasswordManager (siteName TEXT PRIMARY KEY, email TEXT, username TEXT, password TEXT);");
+    //         Console.WriteLine($"{result.Successful}");
+    //     }
+
+    //     public void InsertIntoDatabase(string siteName, string email, string username, string password)
+    //     {
+    //         QueryResult result;
+    //         string sqlStatement = "INSERT INTO PasswordManager VALUES (\'" + siteName + "\', \'" + email + "\', \'" + username + "\', \'" + password + "\');";
+    //         result = _PasswordManagerDB.RunSql(sqlStatement);
+    //         Console.WriteLine(result.Successful);
+    //     }
+
+    //     public void ReadDatabase()
+    //     {
+    //         QueryResult result;
+    //         result = _PasswordManagerDB.RunSql("select * from PasswordManager;");
+    //         Console.WriteLine(result.Successful);
+
+    //         do
+    //         {
+    //             string siteName = result.QueryColumnForString(0);
+    //             string email = result.QueryColumnForString(1);
+    //             string username = result.QueryColumnForString(2);
+    //             string password = result.QueryColumnForString(3);
+
+    //             Console.WriteLine($"siteName: {siteName} email: {email} username: {username} password: {password}");
+
+    //         } while (SplashKit.GetNextRow(result));
+    //     }
+
+    //     public void SearchDatabase(string searchSiteName)
+    //     {
+    //         QueryResult result;
+    //         string sqlStatement = "SELECT * FROM PasswordManager WHERE siteName = " + searchSiteName + ";";
+    //         result = _PasswordManagerDB.RunSql(sqlStatement);
+    //         Console.WriteLine(result.Successful);
+
+    //         do
+    //         {
+    //             int siteName = result.QueryColumnForInt(0);
+    //             string email = result.QueryColumnForString(1);
+    //             string username = result.QueryColumnForString(2);
+    //             string password = result.QueryColumnForString(2);
+
+    //             Console.WriteLine($"siteName: {siteName} email: {email} username: {username} password: {password}");
+
+    //         } while (SplashKit.GetNextRow(result));
+    //     }
+    // }
+}
+

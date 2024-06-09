@@ -1,0 +1,352 @@
+using System;
+using System.Text;
+using SplashKitSDK;
+#nullable disable
+
+namespace PasswordManager2
+{
+    public class Program
+    {
+        //private string _str = "";
+        public static void Main()
+        {
+            Window window = new Window("Password Manager", 600, 600);
+
+            PasswordManager pwmanager = new PasswordManager();
+
+            DatabaseManager databaseManager = new DatabaseManager();
+
+            string password = "";
+
+            // string password = pwmanager.GeneratePassword(12);
+            // Console.WriteLine(password);
+
+            string siteName;
+            string email;
+            string username;
+
+            Button button = new Button() { X = 20, Y = 555 };
+
+            button.OnClick += (btn) => password = pwmanager.GeneratePassword(12);
+
+            // siteName = pwmanager.ReadInput();
+            // email = pwmanager.ReadInput();
+            // username = pwmanager.ReadInput();
+
+            //databaseManager.CreateDatabase();
+            //databaseManager.InsertIntoDatabase("testsite", "testemail", "testusername", password);
+            databaseManager.ReadDatabase();
+
+            while (!window.CloseRequested)
+            {
+                SplashKit.ProcessEvents();
+
+                button.HandleInput();
+
+                if (SplashKit.KeyTyped(KeyCode.SpaceKey))
+                {
+                    string str;
+                    Rectangle rec = new Rectangle();
+                    SplashKit.StartReadingText(rec);
+
+                    //string str;
+
+                    do
+                    {
+                        SplashKit.ProcessEvents();
+
+                        if (!SplashKit.ReadingText())
+                        {
+                            str = "unknown";
+                        }
+                        else
+                        {
+                            str = SplashKit.TextInput();
+                        }
+
+                        //str = SplashKit.TextInput();
+                        //w.Clear(Color.White);
+                        SplashKit.DrawText(str, Color.Black, "SuperFuntime.ttf", 24, 0, 0);
+                        Console.WriteLine(str);
+                        window.Refresh(60);
+                        //SplashKit.Refresh(60);
+                    } while (!SplashKit.KeyTyped(KeyCode.CKey));
+                    // email = ReadInputTest();
+                    // username = ReadInputTest();
+
+
+
+                    //databaseManager.InsertIntoDatabase(siteName, email, username, password);
+                }
+
+                window.Clear(Color.AntiqueWhite);
+
+                button.Draw();
+                window.DrawText(password, Color.Black, "SuperFuntime.ttf", 24, 100, 100);
+
+                window.Refresh(60);
+            }
+        }
+
+        // private static string ReadInputTest()
+        // {
+        //     Window w = new Window("Enter your input", 300, 300);
+        //     Rectangle rec = new Rectangle();
+        //     SplashKit.StartReadingText(w, rec);
+
+        //     string str;
+
+        //     do
+        //     {
+        //         //SplashKit.ProcessEvents();
+
+        //         if (!SplashKit.ReadingText())
+        //         {
+        //             str = "unknown";
+        //         }
+        //         else
+        //         {
+        //             str = SplashKit.TextInput();
+        //         }
+
+        //         //str = SplashKit.TextInput();
+        //         w.Clear(Color.White);
+        //         w.DrawText(str, Color.Black, "SuperFuntime.ttf", 24, 0, 0);
+        //         Console.WriteLine(str);
+        //         w.Refresh(60);
+        //     } while (!w.QuitRequested());
+
+        //     Console.WriteLine(str);
+        //     return str;
+        // }
+    }
+
+    public delegate void ClickAction(Button b);
+
+    public class PasswordManager
+    {
+        // private Window _window;
+
+        public PasswordManager()
+        {
+
+        }
+
+        public string GeneratePassword(int length)
+        {
+            const string lowercaseChars = "abcdefghijklmnopqrstuvwxyz";
+            const string uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const string numericChars = "0123456789";
+            const string specialChars = "!@#$%^&*()_+";
+            const string allChars = lowercaseChars + uppercaseChars + numericChars + specialChars;
+
+            StringBuilder password = new StringBuilder();
+            Random random = new Random();
+
+            // Ensure at least one of each character type
+            password.Append(lowercaseChars[random.Next(lowercaseChars.Length)]);
+            password.Append(uppercaseChars[random.Next(uppercaseChars.Length)]);
+            password.Append(numericChars[random.Next(numericChars.Length)]);
+            password.Append(specialChars[random.Next(specialChars.Length)]);
+
+            // Generate the remaining characters
+            for (int i = 4; i < length; i++)
+            {
+                int index = random.Next(allChars.Length);
+                password.Append(allChars[index]);
+            }
+
+            Console.WriteLine(password);
+
+            // Shuffle the characters to make it more random
+            string shuffledPassword = ShuffleString(password.ToString());
+
+            return shuffledPassword;
+        }
+
+        public string ShuffleString(string str)
+        {
+            char[] charArray = str.ToCharArray();
+            Random random = new Random();
+            int length = charArray.Length;
+
+            for (int i = 0; i < length; i++)
+            {
+                int randIndex = random.Next(length);
+                char temp = charArray[i];
+                charArray[i] = charArray[randIndex];
+                charArray[randIndex] = temp;
+            }
+
+            return new string(charArray);
+        }
+
+        public string ReadInput()
+        {
+            Window w = new Window("Enter your input", 300, 100);
+            //w.MoveTo(window.X, window.Y);
+            string name;
+
+            Rectangle rec = new Rectangle() { X = 0, Y = 0, Width = 300, Height = 100 };
+            SplashKit.StartReadingText(rec);
+
+            do
+            {
+                // SplashKit.StartReadingText(rec);
+                SplashKit.ProcessEvents();
+
+                // if (!SplashKit.ReadingText())
+                // {
+                //     name = "unknown";
+                // }
+                // else
+                // {
+                name = SplashKit.TextInput();
+                // }
+
+                w.Clear(Color.White);
+
+                //SplashKit.DrawRectangle(Color.Black, rec);
+
+                // if (SplashKit.ReadingText())
+                // {
+                //     SplashKit.DrawCollectedText(Color.Black, SplashKit.FontNamed("input"),  30, SplashKit.OptionDefaults());
+                // }
+
+                SplashKit.DrawText(name, Color.Black, "SuperFuntime.ttf", 24, 0, 0);
+
+                //Console.WriteLine(name);
+
+                w.Refresh(60);
+
+            } while (!SplashKit.QuitRequested());
+
+            return name;
+        }
+    }
+
+    public class Button
+    {
+        //private PasswordManager _Pwmanager;
+
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+
+        public string Caption { get; set; }
+
+        public Button()
+        {
+            //_Pwmanager = pwmanager;
+            Width = 100;
+            Height = 25;
+            Caption = "Generate";
+        }
+
+        public void Draw()
+        {
+            SplashKit.FillRectangle(Color.LightGray, X, Y, Width, Height);
+            SplashKit.DrawText(Caption, Color.Black, X + 5, Y + 5);
+        }
+
+        public Rectangle Rectangle
+        {
+            get
+            {
+                return new Rectangle() { X = X, Y = Y, Width = Width, Height = Height };
+            }
+        }
+
+        public bool IsMouseHover
+        {
+            get
+            {
+                return SplashKit.PointInRectangle(SplashKit.MousePosition(), Rectangle);
+            }
+        }
+
+        public event ClickAction OnClick;
+
+        public void HandleInput()
+        {
+            if (SplashKit.MouseClicked(MouseButton.LeftButton) && IsMouseHover)
+            {
+                if (OnClick != null)
+                    OnClick(this);
+                // string password = _Pwmanager.GeneratePassword(12);
+                // Console.WriteLine(password);
+            }
+        }
+    }
+
+    public class DatabaseManager
+    {
+        // private string _SiteName;
+        // private string _Email;
+        // private string _Username;
+        // private string _Password;
+        private Database _PasswordManagerDB;
+
+        public DatabaseManager()
+        {
+            _PasswordManagerDB = SplashKit.OpenDatabase("PasswordManagerDB", "PasswordManagerDB");
+        }
+
+        public void CreateDatabase()
+        {
+            QueryResult result;
+            result = _PasswordManagerDB.RunSql("CREATE TABLE IF NOT EXISTS PasswordManager (siteName TEXT PRIMARY KEY, email TEXT, username TEXT, password TEXT);");
+            Console.WriteLine($"{result.Successful}");
+
+            // result = _PasswordManagerDB.RunSql("INSERT INTO PasswordManager VALUES (100, \'Testing\', \'testEmail \');");
+            // Console.WriteLine(result.Successful);
+        }
+
+        public void InsertIntoDatabase(string siteName, string email, string username, string password)
+        {
+            QueryResult result;
+            string sqlStatement = "INSERT INTO PasswordManager VALUES (\'" + siteName + "\', \'" + email + "\', \'" + username + "\', \'" + password + "\');";
+            result = _PasswordManagerDB.RunSql(sqlStatement);
+            Console.WriteLine(result.Successful);
+        }
+
+        public void ReadDatabase()
+        {
+            QueryResult result;
+            result = _PasswordManagerDB.RunSql("select * from PasswordManager;");
+            Console.WriteLine(result.Successful);
+
+            do
+            {
+                string siteName = result.QueryColumnForString(0);
+                string email = result.QueryColumnForString(1);
+                string username = result.QueryColumnForString(2);
+                string password = result.QueryColumnForString(3);
+
+                Console.WriteLine($"siteName: {siteName} email: {email} username: {username} password: {password}");
+
+            } while (SplashKit.GetNextRow(result));
+        }
+
+        public void SearchDatabase(string searchSiteName)
+        {
+            QueryResult result;
+            string sqlStatement = "SELECT * FROM PasswordManager WHERE siteName = " + searchSiteName + ";";
+            result = _PasswordManagerDB.RunSql(sqlStatement);
+            Console.WriteLine(result.Successful);
+
+            do
+            {
+                int siteName = result.QueryColumnForInt(0);
+                string email = result.QueryColumnForString(1);
+                string username = result.QueryColumnForString(2);
+                string password = result.QueryColumnForString(2);
+
+                Console.WriteLine($"siteName: {siteName} email: {email} username: {username} password: {password}");
+
+            } while (SplashKit.GetNextRow(result));
+        }
+    }
+}
+

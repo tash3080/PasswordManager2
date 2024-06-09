@@ -1,0 +1,13 @@
+PasswordManager Class 
+done 1. Remove the individual Button child class fields (as this is poor design if you are using polymorphism).
+
+done 2. Then in the constructor, just add the new object into the list instead. 
+
+done 3. You may need to update some more of the code as well for this.
+
+done 4. You could update this class to add a 'GetButton' method that get's the Button object from the list using the caption string, 
+     then stores it in a local variable in the respective method to access the data specific to that Button. 
+
+done 5. You might also need some readonly properties in the Button class or child classes.
+
+done 6. please include a UML class diagram of your finalised code in the pdf document.

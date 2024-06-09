@@ -1,0 +1,78 @@
+using System;
+using System.Text;
+using SplashKitSDK;
+#nullable disable
+
+namespace PasswordManager2
+{
+    public class Program
+    {
+        public static void Main()
+        {
+            Window window = new Window("Password Manager", 600, 600);
+            PasswordManager pwmanager = new PasswordManager(window);
+            DatabaseManager databaseManager = new DatabaseManager();
+
+            string password;
+            string siteName;
+            string email;
+            string username;
+
+            Button button = new Button() { X = 20, Y = 555 };
+            Button2 button2 = new Button2() { X = 140, Y = 555 };
+            Button3 button3 = new Button3() { X = 260, Y = 555 };
+            Button4 button4 = new Button4() { X = 380, Y = 555 };
+
+
+            //button.OnClick += (btn) => password = pwmanager.GeneratePassword(12);
+
+
+
+            //databaseManager.CreateDatabase();
+            //databaseManager.InsertIntoDatabase("testsite", "testemail", "testusername", password);
+            //databaseManager.InsertIntoDatabase(siteName, email, username, password);
+
+            databaseManager.ReadDatabase();
+            // databaseManager.SearchDatabase("testsite");
+
+            string[] arr;
+            string[] outArr;
+
+            while (!window.CloseRequested)
+            {
+                SplashKit.ProcessEvents();
+                password = button.HandleInput(pwmanager);
+
+
+
+                arr = button2.HandleInput(pwmanager);
+                siteName = arr[0];
+                email = arr[1];
+                username = arr[2];
+
+                button3.HandleInput(databaseManager, siteName, email, username, password);
+
+                outArr = button4.HandleInput(pwmanager, databaseManager);
+
+                window.Clear(Color.AntiqueWhite);
+
+                button.Draw();
+                button2.Draw();
+                button3.Draw();
+                button4.Draw();
+                window.DrawText(password, Color.Black, "SuperFuntime.ttf", 24, 100, 100);
+                window.DrawText(siteName, Color.Black, "SuperFuntime.ttf", 24, 100, 150);
+                window.DrawText(email, Color.Black, "SuperFuntime.ttf", 24, 100, 200);
+                window.DrawText(username, Color.Black, "SuperFuntime.ttf", 24, 100, 250);
+
+                window.DrawText(outArr[0], Color.Black, 20, 400);
+                window.DrawText(outArr[1], Color.Black, 170, 400);
+                window.DrawText(outArr[2], Color.Black, 320, 400);
+                window.DrawText(outArr[3], Color.Black, 470, 400);
+
+                window.Refresh(60);
+            }
+        }
+    }
+}
+
